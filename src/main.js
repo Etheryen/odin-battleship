@@ -111,12 +111,10 @@ class Player {
   }
 
   attack(player, coords) {
-    // TO BE TESTED
     player.gameboard.receiveAttack(coords);
   }
 
   attackRandom(player) {
-    // TO BE TESTED
     const row = Math.floor(Math.random() * 10);
     const valueIndex = Math.floor(Math.random() * 10);
 
