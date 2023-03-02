@@ -1,16 +1,16 @@
-// export function prettyPrintBoard(board) {
-//   let result = '';
+export function prettyPrintBoard(board) {
+  let result = '';
 
-//   for (const row of board) {
-//     for (const value of row) {
-//       if (value instanceof Ship) result += value.timesHit + '    ';
-//       else result += value + ' ';
-//     }
-//     result += '\n';
-//   }
+  for (const row of board) {
+    for (const value of row) {
+      if (value instanceof Ship) result += value.timesHit + '    ';
+      else result += value + ' ';
+    }
+    result += '\n';
+  }
 
-//   console.log(result);
-// }
+  console.log(result);
+}
 
 class Ship {
   constructor(length) {
@@ -117,19 +117,20 @@ class Player {
 
   attackRandom(player) {
     // TO BE TESTED
-    while (true) {
-      const row = Math.floor(Math.random() * 10);
-      const valueIndex = Math.floor(Math.random() * 10);
+    const row = Math.floor(Math.random() * 10);
+    const valueIndex = Math.floor(Math.random() * 10);
 
-      const coords = [row, valueIndex];
+    const coords = [row, valueIndex];
 
-      if (!player.gameboard.missedAttacks.includes(coords)) {
-        player.gameboard.receiveAttack(coords);
+    for (const missedAttack of player.gameboard.missedAttacks) {
+      if (missedAttack[0] === coords[0] && missedAttack[1] === coords[1]) {
+        this.attackRandom(player);
+        return;
       }
     }
+
+    player.gameboard.receiveAttack(coords);
   }
 }
 
-console.log(new Player().attackRandom(new Player()));
-
-//export { Ship, Gameboard, Player };
+export { Ship, Gameboard, Player };

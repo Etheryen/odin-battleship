@@ -197,5 +197,29 @@ it('players can attack', () => {
   const p2 = new Player();
 
   p1.attack(p2, Gameboard.parseCoords(['B', 2]));
-  expect(p2.gameboard.missedAttacks.length).toBe(1);
+  expect(p2.gameboard.missedAttacks).toStrictEqual([
+    Gameboard.parseCoords(['B', 2]),
+  ]);
+
+  p2.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['C', 3]));
+  p1.attack(p2, Gameboard.parseCoords(['C', 3]));
+  expect(p2.gameboard.board[2][2].timesHit).toBe(1);
+  p1.attack(p2, Gameboard.parseCoords(['D', 3]));
+  expect(p2.gameboard.board[2][2].timesHit).toBe(2);
+  expect(p2.gameboard.board[2][2].isSunk()).toBe(true);
+  expect(p2.gameboard.areShipsSunk()).toBe(true);
+});
+
+it('computer attacks randomly', () => {
+  for (let i = 0; i < 1000; i++) {
+    let p1 = new Player();
+    let p2 = new Player();
+
+    p1.attackRandom(p2);
+    expect(p2.gameboard.missedAttacks.length).toBe(1);
+    let attack1 = p2.gameboard.missedAttacks.at(-1);
+    p1.attackRandom(p2);
+    let attack2 = p2.gameboard.missedAttacks.at(-1);
+    expect(attack1).not.toStrictEqual(attack2);
+  }
 });
