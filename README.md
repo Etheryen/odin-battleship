@@ -4,5 +4,8 @@ Battleship game created in vanilla js using webpack and tested with jest.
 
 ## Todo
 
-- [ ] Cant place ships too closely
+- [ ] Handle turns
+- [ ] Handle ship sunk
+- [ ] Handle all ships sunk
 - [ ] Players place ships themselves
+  - [ ] Cant place ships too closely
