@@ -61,7 +61,6 @@ class Gameboard {
   }
 
   static isAttackInArray(coords, array) {
-    console.log({ coords, array });
     for (const item of array) {
       if (item[0] === coords[0] && item[1] === coords[1]) return true;
     }
