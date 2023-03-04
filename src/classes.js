@@ -1,16 +1,16 @@
-export function prettyPrintBoard(board) {
-  let result = '';
+// export function prettyPrintBoard(board) {
+//   let result = '';
 
-  for (const row of board) {
-    for (const value of row) {
-      if (value instanceof Ship) result += value.timesHit + '    ';
-      else result += value + ' ';
-    }
-    result += '\n';
-  }
+//   for (const row of board) {
+//     for (const value of row) {
+//       if (value instanceof Ship) result += value.timesHit + '    ';
+//       else result += value + ' ';
+//     }
+//     result += '\n';
+//   }
 
-  console.log(result);
-}
+//   console.log(result);
+// }
 
 class Ship {
   constructor(length) {

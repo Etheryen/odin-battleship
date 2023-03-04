@@ -1,4 +1,4 @@
-import { Ship, Gameboard, Player, prettyPrintBoard } from './main'; // REMOVE PRETTY PRINT
+import { Ship, Gameboard, Player } from '../src/classes'; // REMOVE PRETTY PRINT
 
 it('hits a ship', () => {
   const ship = new Ship(2);
