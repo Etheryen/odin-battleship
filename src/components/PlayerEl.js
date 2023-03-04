@@ -1,4 +1,12 @@
-export default function PlayerEl({ playerObj, title }) {
+import { Gameboard } from '../classes';
+import renderApp from '../renderApp';
+
+export default function PlayerEl({
+  playerObj,
+  title,
+  isEnemy = false,
+  attackingPlayerObj,
+}) {
   const wrapper = document.createElement('div');
   wrapper.className = 'player';
 
@@ -27,8 +35,42 @@ export default function PlayerEl({ playerObj, title }) {
         row.appendChild(tile);
       } else {
         let tile = document.createElement('td');
-        tile.innerHTML =
-          playerObj.gameboard.board[rowNum][colNum]?.timesHit ?? '~';
+        if (
+          Gameboard.isAttackInArray(
+            [rowNum, colNum],
+            playerObj.gameboard.missedAttacks
+          )
+        )
+          tile.innerHTML = '·'; // or '•'
+        else if (
+          Gameboard.isAttackInArray(
+            [rowNum, colNum],
+            playerObj.gameboard.hitAttacks
+          )
+        )
+          tile.innerHTML = '✕'; // or svg
+        else {
+          tile.innerHTML = isEnemy
+            ? ''
+            : playerObj.gameboard.board[rowNum][colNum]?.timesHit ?? '';
+        }
+
+        if (
+          isEnemy &&
+          !Gameboard.isAttackInArray(
+            [rowNum, colNum],
+            playerObj.gameboard.missedAttacks
+          ) &&
+          !Gameboard.isAttackInArray(
+            [rowNum, colNum],
+            playerObj.gameboard.hitAttacks
+          )
+        ) {
+          tile.onclick = () => {
+            attackingPlayerObj.attack(playerObj, [rowNum, colNum]);
+            renderApp({ player: attackingPlayerObj, computer: playerObj });
+          };
+        }
         row.appendChild(tile);
       }
     }
