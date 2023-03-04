@@ -1,0 +1,122 @@
+/* IMPORTS */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto+Mono&display=swap');
+
+/* RESETS */
+
+/* makes sizing simpler */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* remove default spacing */
+/* force styling of type through styling, rather than elements */
+
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+/* dark mode user-agent-styles */
+/* 
+html {
+  color-scheme: dark light;
+} */
+
+/* min body height */
+
+body {
+  min-height: 100vh;
+}
+
+/* responsive images/videos */
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* STYLING */
+
+:root {
+  --bg-color: hsl(226, 19%, 18%);
+  --accent-color: hsl(226, 19%, 13%);
+  --light-accent-color: hsl(226, 19%, 16%);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  text-align: center;
+  padding-block: 1.5rem;
+  font-size: 4rem;
+  background-color: var(--accent-color);
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10vw;
+}
+
+main > .player > .title {
+  text-align: center;
+}
+
+main > .player > .board {
+  font-family: 'Roboto Mono', monospace;
+  margin-bottom: 1rem;
+}
+
+main > .player > .board > tr > td {
+  text-align: center;
+  background-color: var(--light-accent-color);
+}
+
+main > .player > .board > tr > td:hover {
+  background-color: var(--accent-color);
+}
+
+
+main > .player > .board > tr > th,
+main > .player > .board > tr > td {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 2.1rem;
+  
+  /* outline: 1px solid red; */
+}
+
+main > .player > .board > tr > th:not(:first-child) {
+  padding-bottom: 1.5rem;
+  border-bottom: 4px solid var(--accent-color);
+}
+
+
+main > .player > .board > tr > :first-child {
+  padding-right: 2rem;
+  border-right: 4px solid var(--accent-color);
+  text-align: right;
+}
+
+
+footer {
+  text-align: center;
+  padding-block: 1rem;
+  background-color: var(--accent-color);
+}
