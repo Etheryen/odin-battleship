@@ -76,6 +76,8 @@ main {
 
 main > .player > .title {
   text-align: center;
+  font-size: 1.5rem;
+  padding-left: calc(2.75rem + 2rem);
 }
 
 main > .player > .board {
