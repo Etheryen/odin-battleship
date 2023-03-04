@@ -32,6 +32,7 @@ class Gameboard {
     this.board = Gameboard.createBoard();
     this.ships = [];
     this.missedAttacks = [];
+    this.hitAttacks = [];
   }
 
   static createBoard() {
@@ -57,6 +58,14 @@ class Gameboard {
     if (!(x in dict) || y < 1 || y > 10) return;
 
     return [y - 1, dict[x]];
+  }
+
+  static isAttackInArray(coords, array) {
+    console.log({ coords, array });
+    for (const item of array) {
+      if (item[0] === coords[0] && item[1] === coords[1]) return true;
+    }
+    return false;
   }
 
   placeShip(ship, coords, options = { vertical: false }) {
@@ -97,6 +106,7 @@ class Gameboard {
 
     if (this.board[row][valueIndex] instanceof Ship) {
       this.board[row][valueIndex].hit();
+      this.hitAttacks.push(coords);
       return true;
     }
 

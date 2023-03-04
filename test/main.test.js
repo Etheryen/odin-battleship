@@ -223,3 +223,53 @@ it('computer attacks randomly', () => {
     expect(attack1).not.toStrictEqual(attack2);
   }
 });
+
+it('checks hit and missed attacks', () => {
+  const p1 = new Player();
+  const p2 = new Player();
+
+  p2.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['B', 2]));
+
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['B', 2]),
+      p2.gameboard.missedAttacks
+    )
+  ).toBe(false);
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['B', 2]),
+      p2.gameboard.hitAttacks
+    )
+  ).toBe(false);
+
+  p1.attack(p2, Gameboard.parseCoords(['C', 2]));
+
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['C', 2]),
+      p2.gameboard.missedAttacks
+    )
+  ).toBe(false);
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['C', 2]),
+      p2.gameboard.hitAttacks
+    )
+  ).toBe(true);
+
+  p1.attack(p2, Gameboard.parseCoords(['C', 3]));
+
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['C', 3]),
+      p2.gameboard.missedAttacks
+    )
+  ).toBe(true);
+  expect(
+    Gameboard.isAttackInArray(
+      Gameboard.parseCoords(['C', 3]),
+      p2.gameboard.hitAttacks
+    )
+  ).toBe(false);
+});
