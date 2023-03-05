@@ -26,53 +26,64 @@ export default function PlayerEl({
 
   boardEl.appendChild(row);
 
+  function styleTile(tile, coords) {
+    const [rowNum, colNum] = coords;
+    const pGboard = playerObj.gameboard;
+
+    if (Gameboard.isAttackInArray(coords, pGboard.missedAttacks)) {
+      tile.innerHTML = '·'; // or '•'
+      return;
+    }
+
+    if (Gameboard.isAttackInArray(coords, pGboard.hitAttacks)) {
+      tile.innerHTML = '✕'; // or svg
+
+      if (pGboard.board[rowNum][colNum]?.isSunk())
+        tile.style.backgroundColor = 'rgba(255, 0, 0, 0.9)';
+
+      return;
+    }
+
+    if (!isEnemy) {
+      tile.innerHTML = pGboard.board[rowNum][colNum]?.timesHit ?? '';
+    }
+  }
+
+  function createTile(coords) {
+    const [rowNum, colNum] = coords;
+
+    if (colNum < 0) {
+      const tile = document.createElement('th');
+      tile.innerHTML = rowNum + 1;
+      return tile;
+    }
+
+    const pGboard = playerObj.gameboard;
+
+    const tile = document.createElement('td');
+    styleTile(tile, coords);
+
+    if (
+      isEnemy &&
+      !Gameboard.isAttackInArray(
+        coords,
+        pGboard.missedAttacks.concat(pGboard.hitAttacks)
+      )
+    ) {
+      tile.onclick = () => {
+        attackingPlayerObj.attack(playerObj, coords);
+        playerObj.attackRandom(attackingPlayerObj);
+        renderApp({ player: attackingPlayerObj, computer: playerObj });
+      };
+    }
+    return tile;
+  }
+
   for (let rowNum = 0; rowNum < 10; rowNum++) {
     let row = document.createElement('tr');
     for (let colNum = -1; colNum < 10; colNum++) {
-      if (colNum < 0) {
-        let tile = document.createElement('th');
-        tile.innerHTML = rowNum + 1;
-        row.appendChild(tile);
-      } else {
-        let tile = document.createElement('td');
-        if (
-          Gameboard.isAttackInArray(
-            [rowNum, colNum],
-            playerObj.gameboard.missedAttacks
-          )
-        )
-          tile.innerHTML = '·'; // or '•'
-        else if (
-          Gameboard.isAttackInArray(
-            [rowNum, colNum],
-            playerObj.gameboard.hitAttacks
-          )
-        )
-          tile.innerHTML = '✕'; // or svg
-        else {
-          tile.innerHTML = isEnemy
-            ? ''
-            : playerObj.gameboard.board[rowNum][colNum]?.timesHit ?? '';
-        }
-
-        if (
-          isEnemy &&
-          !Gameboard.isAttackInArray(
-            [rowNum, colNum],
-            playerObj.gameboard.missedAttacks
-          ) &&
-          !Gameboard.isAttackInArray(
-            [rowNum, colNum],
-            playerObj.gameboard.hitAttacks
-          )
-        ) {
-          tile.onclick = () => {
-            attackingPlayerObj.attack(playerObj, [rowNum, colNum]);
-            renderApp({ player: attackingPlayerObj, computer: playerObj });
-          };
-        }
-        row.appendChild(tile);
-      }
+      let tile = createTile([rowNum, colNum]);
+      row.appendChild(tile);
     }
     boardEl.appendChild(row);
   }
