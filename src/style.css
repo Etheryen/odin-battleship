@@ -72,6 +72,7 @@ main {
   justify-content: center;
   align-items: center;
   gap: 10vw;
+  padding-block: 1.5rem;
 }
 
 main > .player > .title {
