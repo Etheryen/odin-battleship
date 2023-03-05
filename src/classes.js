@@ -129,8 +129,10 @@ class Player {
 
     const coords = [row, valueIndex];
 
-    for (const missedAttack of player.gameboard.missedAttacks) {
-      if (missedAttack[0] === coords[0] && missedAttack[1] === coords[1]) {
+    for (const usedAttack of player.gameboard.missedAttacks.concat(
+      player.gameboard.hitAttacks
+    )) {
+      if (usedAttack[0] === coords[0] && usedAttack[1] === coords[1]) {
         this.attackRandom(player);
         return;
       }
