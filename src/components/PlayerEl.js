@@ -89,6 +89,7 @@ export default function PlayerEl({
         pGboard.missedAttacks.concat(pGboard.hitAttacks)
       )
     ) {
+      // turns
       tile.onclick = () => {
         attackingPlayerObj.attack(playerObj, coords);
         playerObj.attackRandom(attackingPlayerObj);
