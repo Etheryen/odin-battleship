@@ -26,6 +26,25 @@ export default function PlayerEl({
 
   boardEl.appendChild(row);
 
+  for (let rowNum = 0; rowNum < 10; rowNum++) {
+    let row = document.createElement('tr');
+    for (let colNum = -1; colNum < 10; colNum++) {
+      let tile = createTile([rowNum, colNum]);
+      row.appendChild(tile);
+    }
+    boardEl.appendChild(row);
+  }
+
+  const titleEl = document.createElement('h1');
+  titleEl.className = 'title';
+  titleEl.innerHTML = title;
+
+  wrapper.appendChild(boardEl);
+  wrapper.appendChild(titleEl);
+  return wrapper;
+
+  // helper functions
+
   function styleTile(tile, coords) {
     const [rowNum, colNum] = coords;
     const pGboard = playerObj.gameboard;
@@ -78,21 +97,4 @@ export default function PlayerEl({
     }
     return tile;
   }
-
-  for (let rowNum = 0; rowNum < 10; rowNum++) {
-    let row = document.createElement('tr');
-    for (let colNum = -1; colNum < 10; colNum++) {
-      let tile = createTile([rowNum, colNum]);
-      row.appendChild(tile);
-    }
-    boardEl.appendChild(row);
-  }
-
-  const titleEl = document.createElement('h1');
-  titleEl.className = 'title';
-  titleEl.innerHTML = title;
-
-  wrapper.appendChild(boardEl);
-  wrapper.appendChild(titleEl);
-  return wrapper;
 }
