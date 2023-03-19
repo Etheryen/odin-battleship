@@ -53,7 +53,7 @@ video {
 
 @media (max-width: 1250px) {
   :root {
-    font-size: 55%;
+    font-size: min(2.5vw, 100%);
   }
 }
 
