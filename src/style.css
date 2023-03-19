@@ -51,6 +51,12 @@ video {
   --light-accent-color: hsl(226, 19%, 16%);
 }
 
+@media (max-width: 1250px) {
+  :root {
+    font-size: 55%;
+  }
+}
+
 body {
   background-color: var(--bg-color);
   color: white;
@@ -73,6 +79,13 @@ main {
   align-items: center;
   gap: 10vw;
   padding-block: 1.5rem;
+}
+
+@media (max-width: 1250px) {
+  main {
+    flex-direction: column;
+    gap: 4rem;
+  }
 }
 
 main > .player > .title {
