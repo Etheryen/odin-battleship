@@ -73,7 +73,13 @@ header {
   background-color: var(--accent-color);
 }
 
-main {
+main > .gameOverMessage {
+  text-align: center;
+  font-size: 3.5rem;
+  padding-block: 1.5rem;
+}
+
+main > .players {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,35 +88,35 @@ main {
 }
 
 @media (max-width: 1250px) {
-  main {
+  main > .players {
     flex-direction: column;
     gap: 4rem;
   }
 }
 
-main > .player > .title {
+main > .players > .player > .title {
   text-align: center;
   font-size: 1.5rem;
   padding-left: calc(2.75rem + 2rem);
 }
 
-main > .player > .board {
+main > .players > .player > .board {
   font-family: 'Roboto Mono', monospace;
   margin-bottom: 1rem;
 }
 
-main > .player > .board > tr > td {
+main > .players > .player > .board > tr > td {
   text-align: center;
   background-color: var(--light-accent-color);
 }
 
-main > .player > .board > tr > td:hover {
+main > .players > .player > .board > tr > td:hover {
   background-color: var(--accent-color);
 }
 
 
-main > .player > .board > tr > th,
-main > .player > .board > tr > td {
+main > .players > .player > .board > tr > th,
+main > .players > .player > .board > tr > td {
   width: 2.75rem;
   height: 2.75rem;
   font-size: 2.1rem;
@@ -118,13 +124,13 @@ main > .player > .board > tr > td {
   /* outline: 1px solid red; */
 }
 
-main > .player > .board > tr > th:not(:first-child) {
+main > .players > .player > .board > tr > th:not(:first-child) {
   padding-bottom: 1.5rem;
   border-bottom: 4px solid var(--accent-color);
 }
 
 
-main > .player > .board > tr > :first-child {
+main > .players > .player > .board > tr > :first-child {
   padding-right: 2rem;
   border-right: 4px solid var(--accent-color);
   text-align: right;

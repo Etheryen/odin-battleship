@@ -6,6 +6,7 @@ export default function PlayerEl({
   title,
   isEnemy = false,
   attackingPlayerObj,
+  isGameOver,
 }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'player';
@@ -90,10 +91,18 @@ export default function PlayerEl({
       )
     ) {
       // turns
+      if (isGameOver) return tile;
       tile.onclick = () => {
         attackingPlayerObj.attack(playerObj, coords);
         playerObj.attackRandom(attackingPlayerObj);
-        renderApp({ player: attackingPlayerObj, computer: playerObj });
+        const isGameOver =
+          attackingPlayerObj.gameboard.areShipsSunk() ||
+          playerObj.gameboard.areShipsSunk();
+        renderApp({
+          player: attackingPlayerObj,
+          computer: playerObj,
+          isGameOver,
+        });
       };
     }
     return tile;

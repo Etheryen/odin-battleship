@@ -2,12 +2,13 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import Main from './components/Main';
 
-export default function renderApp({ player, computer }) {
+export default function renderApp({ player, computer, isGameOver }) {
   const elements = [
     Header(),
     Main({
       player,
       computer,
+      isGameOver,
     }),
     Footer(),
   ];
