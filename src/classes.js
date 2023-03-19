@@ -112,6 +112,24 @@ class Gameboard {
     this.missedAttacks.push(coords);
     return false;
   }
+
+  canPlaceShip(ship, coords, options = { vertical: false }) {
+    const [row, valueIndex] = coords;
+
+    const axis = options.vertical ? row : valueIndex;
+    if (axis + ship.length > 10) return false; // check if ship fits
+
+    for (let i = 0; i < ship.length; i++) {
+      // check if no ship in the way
+      if (options.vertical && this.board[row + i][valueIndex] !== null)
+        return false;
+
+      if (!options.vertical && this.board[row][valueIndex + i] !== null)
+        return false;
+    }
+
+    return true;
+  }
 }
 
 class Player {

@@ -273,3 +273,36 @@ it('checks hit and missed attacks', () => {
     )
   ).toBe(false);
 });
+
+it('checks placement of a new ship', () => {
+  const board = new Gameboard();
+
+  expect(
+    board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['B', '2']))
+  ).toBe(true);
+  board.placeShip(new Ship(3), Gameboard.parseCoords(['B', '2']));
+
+  expect(
+    board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['B', '1']), {
+      vertical: true,
+    })
+  ).toBe(false);
+  expect(
+    board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['C', '1']), {
+      vertical: true,
+    })
+  ).toBe(false);
+  expect(
+    board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['D', '1']), {
+      vertical: true,
+    })
+  ).toBe(false);
+
+  board.placeShip(new Ship(5), Gameboard.parseCoords(['I', 2]), {
+    vertical: true,
+  });
+
+  expect(
+    board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['G', '4']))
+  ).toBe(false);
+});
