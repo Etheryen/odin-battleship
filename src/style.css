@@ -103,6 +103,7 @@ main > .players > .player > .title {
 main > .players > .player > .board {
   font-family: 'Roboto Mono', monospace;
   margin-bottom: 1rem;
+  user-select: none;
 }
 
 main > .players > .player > .board > tr > td {

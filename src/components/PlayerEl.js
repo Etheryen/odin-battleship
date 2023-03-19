@@ -94,10 +94,15 @@ export default function PlayerEl({
       if (isGameOver) return tile;
       tile.onclick = () => {
         attackingPlayerObj.attack(playerObj, coords);
-        playerObj.attackRandom(attackingPlayerObj);
+
+        if (!playerObj.gameboard.areShipsSunk()) {
+          playerObj.attackRandom(attackingPlayerObj);
+        }
+
         const isGameOver =
           attackingPlayerObj.gameboard.areShipsSunk() ||
           playerObj.gameboard.areShipsSunk();
+
         renderApp({
           player: attackingPlayerObj,
           computer: playerObj,
