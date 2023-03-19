@@ -120,7 +120,7 @@ class Player {
   }
 
   attack(player, coords) {
-    player.gameboard.receiveAttack(coords);
+    return player.gameboard.receiveAttack(coords);
   }
 
   attackRandom(player) {
