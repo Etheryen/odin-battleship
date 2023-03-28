@@ -1,4 +1,4 @@
-import { Ship, Gameboard, Player } from '../src/classes';
+import { Ship, Gameboard, Player, prettyPrintBoard } from '../src/classes';
 
 it('hits a ship', () => {
   const ship = new Ship(2);
@@ -129,7 +129,7 @@ it('doesnt place ship illegally', () => {
   ).toBe(false);
   expect(previousBoard).toStrictEqual(gameboard.board);
   expect(
-    gameboard.placeShip(new Ship(4), Gameboard.parseCoords(['E', 1]), {
+    gameboard.placeShip(new Ship(3), Gameboard.parseCoords(['E', 1]), {
       vertical: true,
     })
   ).toBe(true);
@@ -305,4 +305,46 @@ it('checks placement of a new ship', () => {
   expect(
     board.canPlaceShip(new Ship(3), Gameboard.parseCoords(['G', '4']))
   ).toBe(false);
+});
+
+it('cant place ships too close', () => {
+  const board = new Gameboard();
+
+  board.placeShip(new Ship(3), Gameboard.parseCoords(['C', '4']));
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['A', '1']), {
+      vertical: true,
+    })
+  ).toBe(true);
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['B', '1']), {
+      vertical: true,
+    })
+  ).toBe(true);
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['B', '2']), {
+      vertical: true,
+    })
+  ).toBe(false);
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['J', '1']), {
+      vertical: true,
+    })
+  ).toBe(true);
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['J', '9']), {
+      vertical: true,
+    })
+  ).toBe(true);
+
+  expect(
+    board.canPlaceShip(new Ship(2), Gameboard.parseCoords(['A', '9']), {
+      vertical: true,
+    })
+  ).toBe(true);
 });

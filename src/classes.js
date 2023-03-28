@@ -1,16 +1,16 @@
-// export function prettyPrintBoard(board) {
-//   let result = '';
+export function prettyPrintBoard(board) {
+  let result = '';
 
-//   for (const row of board) {
-//     for (const value of row) {
-//       if (value instanceof Ship) result += value.timesHit + '    ';
-//       else result += value + ' ';
-//     }
-//     result += '\n';
-//   }
+  for (const row of board) {
+    for (const value of row) {
+      if (value instanceof Ship) result += value.timesHit + '    ';
+      else result += value + ' ';
+    }
+    result += '\n';
+  }
 
-//   console.log(result);
-// }
+  console.log(result);
+}
 
 class Ship {
   constructor(length) {
@@ -111,11 +111,37 @@ class Gameboard {
 
     for (let i = 0; i < ship.length; i++) {
       // check if no ship in the way
-      if (options.vertical && this.board[row + i][valueIndex] !== null)
-        return false;
+      let curRow = row;
+      let curValIndex = valueIndex;
 
-      if (!options.vertical && this.board[row][valueIndex + i] !== null)
+      if (options.vertical) curRow += i;
+      if (!options.vertical) curValIndex += i;
+
+      if (this.board[curRow][curValIndex] instanceof Ship) return false;
+      if (
+        curValIndex < 9 &&
+        this.board[curRow][curValIndex + 1] instanceof Ship
+      )
         return false;
+      if (
+        curValIndex > 0 &&
+        this.board[curRow][curValIndex - 1] instanceof Ship
+      )
+        return false;
+      if (curRow < 9) {
+        if (this.board[curRow + 1][curValIndex] instanceof Ship) return false;
+        if (this.board[curRow + 1][curValIndex + 1] instanceof Ship)
+          return false;
+        if (this.board[curRow + 1][curValIndex - 1] instanceof Ship)
+          return false;
+      }
+      if (curRow > 0) {
+        if (this.board[curRow - 1][curValIndex] instanceof Ship) return false;
+        if (this.board[curRow - 1][curValIndex + 1] instanceof Ship)
+          return false;
+        if (this.board[curRow - 1][curValIndex - 1] instanceof Ship)
+          return false;
+      }
     }
 
     return true;
