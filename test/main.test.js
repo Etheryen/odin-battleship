@@ -66,7 +66,7 @@ it('places a ship vertically', () => {
   }
 });
 
-it('all parts of the ship know it is it', () => {
+it('all parts of the ship know it is hit', () => {
   const gameboard = new Gameboard();
 
   const length = 5;
