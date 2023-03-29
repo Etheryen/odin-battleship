@@ -1,5 +1,5 @@
-import { Gameboard } from '../classes';
-import renderApp from '../renderApp';
+import { Gameboard } from '../js/classes';
+import renderApp from '../js/renderApp';
 
 export default function PlayerEl({
   playerObj,
@@ -65,7 +65,8 @@ export default function PlayerEl({
     }
 
     if (!isEnemy) {
-      tile.innerHTML = pGboard.board[rowNum][colNum]?.timesHit ?? '';
+      const shipMaybe = pGboard.board[rowNum][colNum];
+      tile.innerHTML = shipMaybe ? shipMaybe.length - shipMaybe.timesHit : '';
     }
   }
 
