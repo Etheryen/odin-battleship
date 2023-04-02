@@ -1,17 +1,3 @@
-export function prettyPrintBoard(board) {
-  let result = '';
-
-  for (const row of board) {
-    for (const value of row) {
-      if (value instanceof Ship) result += value.timesHit + '    ';
-      else result += value + ' ';
-    }
-    result += '\n';
-  }
-
-  console.log(result);
-}
-
 function isArrayInArray(arr, item) {
   return arr.some((ele) => JSON.stringify(ele) === JSON.stringify(item));
 }
@@ -37,6 +23,7 @@ class Gameboard {
     this.ships = [];
     this.missedAttacks = [];
     this.hitAttacks = [];
+    this.possibleHitsQueue = [];
   }
 
   static createBoard() {
@@ -94,7 +81,6 @@ class Gameboard {
   }
 
   receiveAttack(coords) {
-    // maybe uselless returns
     const [row, valueIndex] = coords;
 
     if (this.board[row][valueIndex] instanceof Ship) {
@@ -234,7 +220,7 @@ class Gameboard {
     }
 
     for (let i = 1; i < length; i++) {
-      if (row - 1 < 0) break;
+      if (row - i < 0) break;
 
       if (this.board[row - i][valueIndex] instanceof Ship)
         result.push([row - i, valueIndex]);
@@ -250,7 +236,7 @@ class Gameboard {
     }
 
     for (let i = 1; i < length; i++) {
-      if (valueIndex - 1 < 0) break;
+      if (valueIndex - i < 0) break;
 
       if (this.board[row][valueIndex - i] instanceof Ship)
         result.push([row, valueIndex - i]);
@@ -258,6 +244,16 @@ class Gameboard {
     }
 
     return result;
+  }
+
+  addAdjacentSquaresToQueue(coords) {
+    const [row, valueIndex] = coords;
+    const queue = this.possibleHitsQueue;
+
+    if (row > 0) queue.push([row - 1, valueIndex]);
+    if (valueIndex < 9) queue.push([row, valueIndex + 1]);
+    if (row < 9) queue.push([row + 1, valueIndex]);
+    if (valueIndex > 0) queue.push([row, valueIndex - 1]);
   }
 }
 
@@ -271,21 +267,44 @@ class Player {
   }
 
   attackRandom(player) {
+    // remove missed and hit attacks from queue
+    const pGboard = player.gameboard;
+
+    const usedAttacks = pGboard.missedAttacks.concat(pGboard.hitAttacks);
+
+    pGboard.possibleHitsQueue = pGboard.possibleHitsQueue.filter(
+      (queuedAttack) => !isArrayInArray(usedAttacks, queuedAttack)
+    );
+
+    // get coords from queue randomly, if queue empty then roll
+    if (pGboard.possibleHitsQueue.length > 0) {
+      const randIndex = Math.floor(
+        Math.random() * pGboard.possibleHitsQueue.length
+      );
+
+      const randPossibleHit = pGboard.possibleHitsQueue[randIndex];
+
+      if (pGboard.receiveAttack(randPossibleHit)) {
+        pGboard.addAdjacentSquaresToQueue(randPossibleHit);
+      }
+      return;
+    }
+
     const row = Math.floor(Math.random() * 10);
     const valueIndex = Math.floor(Math.random() * 10);
 
     const coords = [row, valueIndex];
 
-    for (const usedAttack of player.gameboard.missedAttacks.concat(
-      player.gameboard.hitAttacks
-    )) {
+    for (const usedAttack of usedAttacks) {
       if (usedAttack[0] === coords[0] && usedAttack[1] === coords[1]) {
         this.attackRandom(player);
         return;
       }
     }
 
-    player.gameboard.receiveAttack(coords);
+    if (pGboard.receiveAttack(coords)) {
+      pGboard.addAdjacentSquaresToQueue(coords);
+    }
   }
 }
 

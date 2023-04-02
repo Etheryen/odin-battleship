@@ -51,12 +51,12 @@ export default function PlayerEl({
     const pGboard = playerObj.gameboard;
 
     if (Gameboard.isAttackInArray(coords, pGboard.missedAttacks)) {
-      tile.innerHTML = '·'; // or '•'
+      tile.innerHTML = '·';
       return;
     }
 
     if (Gameboard.isAttackInArray(coords, pGboard.hitAttacks)) {
-      tile.innerHTML = '✕'; // or svg
+      tile.innerHTML = '✕';
       if (pGboard.board[rowNum][colNum]?.isSunk()) tile.classList.add('sunk');
     }
 

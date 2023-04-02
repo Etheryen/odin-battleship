@@ -438,3 +438,30 @@ it('finds all squares covered by a ship', () => {
     [1, 4],
   ]);
 });
+
+it('adds adjacent squares to queue', () => {
+  const g = new Gameboard();
+
+  g.addAdjacentSquaresToQueue([1, 1]);
+  expect(g.possibleHitsQueue).toStrictEqual([
+    [0, 1],
+    [1, 2],
+    [2, 1],
+    [1, 0],
+  ]);
+
+  g.possibleHitsQueue = [];
+  g.addAdjacentSquaresToQueue([0, 1]);
+  expect(g.possibleHitsQueue).toStrictEqual([
+    [0, 2],
+    [1, 1],
+    [0, 0],
+  ]);
+
+  g.possibleHitsQueue = [];
+  g.addAdjacentSquaresToQueue([9, 9]);
+  expect(g.possibleHitsQueue).toStrictEqual([
+    [8, 9],
+    [9, 8],
+  ]);
+});
