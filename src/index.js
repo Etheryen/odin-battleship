@@ -1,5 +1,6 @@
-import { Gameboard, Player, Ship } from './classes';
-import renderApp from './renderApp';
+import { Gameboard, Player, Ship } from './js/classes';
+import renderApp from './js/renderApp';
+import renderShipPlacing from './js/renderShipPlacing';
 import './style.css';
 
 const player = new Player();
@@ -29,23 +30,9 @@ function tests() {
   player.gameboard.placeShip(new Ship(1), Gameboard.parseCoords(['G', 1]));
 
   // computer
-  computer.gameboard.placeShip(new Ship(4), Gameboard.parseCoords(['A', 1]), {
-    vertical: true,
-  });
-  computer.gameboard.placeShip(new Ship(3), Gameboard.parseCoords(['I', 8]), {
-    vertical: true,
-  });
-  computer.gameboard.placeShip(new Ship(3), Gameboard.parseCoords(['B', 8]));
-  computer.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['D', 10]));
-  computer.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['D', 6]));
-  computer.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['G', 3]), {
-    vertical: true,
-  });
-  computer.gameboard.placeShip(new Ship(1), Gameboard.parseCoords(['I', 2]));
-  computer.gameboard.placeShip(new Ship(1), Gameboard.parseCoords(['J', 5]));
-  computer.gameboard.placeShip(new Ship(1), Gameboard.parseCoords(['D', 2]));
-  computer.gameboard.placeShip(new Ship(1), Gameboard.parseCoords(['D', 4]));
+  computer.gameboard.fillRandomly();
 }
 tests();
 
+// renderShipPlacing({ player });
 renderApp({ player, computer });

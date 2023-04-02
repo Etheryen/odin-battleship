@@ -73,10 +73,38 @@ header {
   background-color: var(--accent-color);
 }
 
-main > .gameOverMessage {
-  text-align: center;
-  font-size: 3.5rem;
+main.shipPlacing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-block: 1.5rem;
+  outline: none;
+}
+
+main > .gameOverWrapper {
+  padding-block: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+main > .gameOverWrapper > .gameOverMessage {
+  text-align: center;
+  font-size: 5rem;
+}
+
+main > .gameOverWrapper > button {
+  font-size: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+main > .gameOverWrapper > button:hover {
+  filter: brightness(0.5);
 }
 
 main > .players {
@@ -94,30 +122,30 @@ main > .players {
   }
 }
 
-main > .players > .player > .title {
+main .player > .title {
   text-align: center;
   font-size: 1.5rem;
   padding-left: calc(2.75rem + 2rem);
 }
 
-main > .players > .player > .board {
+main  .player > .board {
   font-family: 'Roboto Mono', monospace;
   margin-bottom: 1rem;
   user-select: none;
 }
 
-main > .players > .player > .board > tr > td {
+main .player > .board > tr > td {
   text-align: center;
   background-color: var(--light-accent-color);
 }
 
-main > .players > .player > .board > tr > td:hover {
+main:not(.shipPlacing) .player > .board > tr > td:hover {
   background-color: var(--accent-color);
 }
 
 
-main > .players > .player > .board > tr > th,
-main > .players > .player > .board > tr > td {
+main .player > .board > tr > th,
+main .player > .board > tr > td {
   width: 2.75rem;
   height: 2.75rem;
   font-size: 2.1rem;
@@ -125,13 +153,13 @@ main > .players > .player > .board > tr > td {
   /* outline: 1px solid red; */
 }
 
-main > .players > .player > .board > tr > th:not(:first-child) {
+main .player > .board > tr > th:not(:first-child) {
   padding-bottom: 1.5rem;
   border-bottom: 4px solid var(--accent-color);
 }
 
 
-main > .players > .player > .board > tr > :first-child {
+main .player > .board > tr > :first-child {
   padding-right: 2rem;
   border-right: 4px solid var(--accent-color);
   text-align: right;
@@ -142,4 +170,21 @@ footer {
   text-align: center;
   padding-block: 1rem;
   background-color: var(--accent-color);
+}
+
+main:not(.shipPlacing) .player > .board > tr > td.sunk {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+main .player > .board > tr > td.ship:not(.sunk) {
+  background-color: rgba(48, 121, 255, 0.8);
+}
+
+main.shipPlacing .player > .board > tr > td.legal {
+  background-color: rgba(0, 255, 0, 0.8);
+
+}
+
+main.shipPlacing .player > .board > tr > td.illegal {
+  background-color: rgba(255, 0, 0, 0.9);
 }

@@ -1,4 +1,8 @@
-import { Ship, Gameboard, Player, prettyPrintBoard } from '../src/classes';
+import { Ship, Gameboard, Player, prettyPrintBoard } from '../src/js/classes';
+
+function isArrayInArray(arr, item) {
+  return arr.some((ele) => JSON.stringify(ele) === JSON.stringify(item));
+}
 
 it('hits a ship', () => {
   const ship = new Ship(2);
@@ -159,13 +163,15 @@ it('gameboard receives attack', () => {
   const ship = new Ship(4);
   gameboard.placeShip(ship, coords);
   expect(gameboard.receiveAttack(Gameboard.parseCoords(['F', 5]))).toBe(true);
-  expect(gameboard.missedAttacks).toStrictEqual([]);
+  expect(
+    isArrayInArray(gameboard.missedAttacks, Gameboard.parseCoords(['F', 5]))
+  ).toBe(false);
   expect(gameboard.ships).toStrictEqual([ship]);
 
   expect(gameboard.receiveAttack(Gameboard.parseCoords(['E', 6]))).toBe(false);
-  expect(gameboard.missedAttacks).toStrictEqual([
-    Gameboard.parseCoords(['E', 6]),
-  ]);
+  expect(
+    isArrayInArray(gameboard.missedAttacks, Gameboard.parseCoords(['E', 6]))
+  ).toBe(true);
 });
 
 it('gameboard reports all ships sunk', () => {
@@ -197,9 +203,9 @@ it('players can attack', () => {
   const p2 = new Player();
 
   p1.attack(p2, Gameboard.parseCoords(['B', 2]));
-  expect(p2.gameboard.missedAttacks).toStrictEqual([
-    Gameboard.parseCoords(['B', 2]),
-  ]);
+  expect(
+    isArrayInArray(p2.gameboard.missedAttacks, Gameboard.parseCoords(['B', 2]))
+  ).toBe(true);
 
   p2.gameboard.placeShip(new Ship(2), Gameboard.parseCoords(['C', 3]));
   p1.attack(p2, Gameboard.parseCoords(['C', 3]));
@@ -347,4 +353,88 @@ it('cant place ships too close', () => {
       vertical: true,
     })
   ).toBe(true);
+});
+
+it('returns squares covered by a new ship', () => {
+  const board = new Gameboard();
+
+  let ship = new Ship(3);
+  let coords = Gameboard.parseCoords(['B', '2']);
+  expect(board.getSquaresCoveredByNewShip(ship, coords)).toStrictEqual([
+    [1, 1],
+    [1, 2],
+    [1, 3],
+  ]);
+  expect(
+    board.getSquaresCoveredByNewShip(ship, coords, { vertical: true })
+  ).toStrictEqual([
+    [1, 1],
+    [2, 1],
+    [3, 1],
+  ]);
+
+  ship = new Ship(4);
+  coords = Gameboard.parseCoords(['H', '8']);
+  expect(board.getSquaresCoveredByNewShip(ship, coords)).toStrictEqual([
+    [7, 7],
+    [7, 8],
+    [7, 9],
+  ]);
+  expect(
+    board.getSquaresCoveredByNewShip(ship, coords, { vertical: true })
+  ).toStrictEqual([
+    [7, 7],
+    [8, 7],
+    [9, 7],
+  ]);
+
+  coords = Gameboard.parseCoords(['J', '7']);
+  expect(
+    board.getSquaresCoveredByNewShip(ship, coords, { vertical: true })
+  ).toStrictEqual([
+    [6, 9],
+    [7, 9],
+    [8, 9],
+    [9, 9],
+  ]);
+});
+
+it('gets next ship length to place', () => {
+  const g = new Gameboard();
+
+  expect(g.getNextShipLengthToPlace()).toBe(4);
+  g.placeShip(new Ship(4), Gameboard.parseCoords(['A', 1]));
+  expect(g.getNextShipLengthToPlace()).toBe(3);
+  g.placeShip(new Ship(3), Gameboard.parseCoords(['A', 3]));
+  expect(g.getNextShipLengthToPlace()).toBe(3);
+  g.placeShip(new Ship(3), Gameboard.parseCoords(['A', 5]));
+  expect(g.getNextShipLengthToPlace()).toBe(2);
+  g.placeShip(new Ship(2), Gameboard.parseCoords(['A', 7]));
+  expect(g.getNextShipLengthToPlace()).toBe(2);
+  g.placeShip(new Ship(2), Gameboard.parseCoords(['A', 9]));
+  expect(g.getNextShipLengthToPlace()).toBe(2);
+  g.placeShip(new Ship(2), Gameboard.parseCoords(['F', 1]));
+  expect(g.getNextShipLengthToPlace()).toBe(1);
+  g.placeShip(new Ship(1), Gameboard.parseCoords(['J', 1]));
+  expect(g.getNextShipLengthToPlace()).toBe(1);
+  g.placeShip(new Ship(1), Gameboard.parseCoords(['J', 3]));
+  expect(g.getNextShipLengthToPlace()).toBe(1);
+  g.placeShip(new Ship(1), Gameboard.parseCoords(['J', 5]));
+  expect(g.getNextShipLengthToPlace()).toBe(1);
+  g.placeShip(new Ship(1), Gameboard.parseCoords(['J', 7]));
+  expect(g.getNextShipLengthToPlace()).toBeUndefined();
+});
+
+it('finds all squares covered by a ship', () => {
+  const g = new Gameboard();
+
+  g.placeShip(new Ship(4), Gameboard.parseCoords(['B', '2']));
+  expect(
+    g.findAllShipSquares(4, Gameboard.parseCoords(['B', '2']))
+  ).toStrictEqual([
+    [1, 1],
+    [1, 2],
+    [1, 3],
+    [1, 4],
+  ]);
 });

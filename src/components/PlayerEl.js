@@ -1,4 +1,4 @@
-import { Gameboard } from '../js/classes';
+import { Gameboard, Ship } from '../js/classes';
 import renderApp from '../js/renderApp';
 
 export default function PlayerEl({
@@ -57,16 +57,12 @@ export default function PlayerEl({
 
     if (Gameboard.isAttackInArray(coords, pGboard.hitAttacks)) {
       tile.innerHTML = '✕'; // or svg
-
-      if (pGboard.board[rowNum][colNum]?.isSunk())
-        tile.style.backgroundColor = 'rgba(255, 0, 0, 0.9)';
-
-      return;
+      if (pGboard.board[rowNum][colNum]?.isSunk()) tile.classList.add('sunk');
     }
 
     if (!isEnemy) {
-      const shipMaybe = pGboard.board[rowNum][colNum];
-      tile.innerHTML = shipMaybe ? shipMaybe.length - shipMaybe.timesHit : '';
+      const isShip = playerObj.gameboard.board[rowNum][colNum] instanceof Ship;
+      if (isShip) tile.classList.add('ship');
     }
   }
 

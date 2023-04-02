@@ -12,6 +12,10 @@ export function prettyPrintBoard(board) {
   console.log(result);
 }
 
+function isArrayInArray(arr, item) {
+  return arr.some((ele) => JSON.stringify(ele) === JSON.stringify(item));
+}
+
 class Ship {
   constructor(length) {
     this.length = length;
@@ -96,6 +100,33 @@ class Gameboard {
     if (this.board[row][valueIndex] instanceof Ship) {
       this.board[row][valueIndex].hit();
       this.hitAttacks.push(coords);
+
+      // add guaranteed empty squares
+      this.missedAttacks.push([row - 1, valueIndex - 1]);
+      this.missedAttacks.push([row + 1, valueIndex + 1]);
+      this.missedAttacks.push([row + 1, valueIndex - 1]);
+      this.missedAttacks.push([row - 1, valueIndex + 1]);
+
+      if (this.board[row][valueIndex].isSunk()) {
+        const shipSquares = this.findAllShipSquares(
+          this.board[row][valueIndex].length,
+          coords
+        );
+
+        for (const shipSquare of shipSquares) {
+          let [newRow, newValueIndex] = shipSquare;
+
+          if (!isArrayInArray(this.hitAttacks, [newRow - 1, newValueIndex]))
+            this.missedAttacks.push([newRow - 1, newValueIndex]);
+          if (!isArrayInArray(this.hitAttacks, [newRow + 1, newValueIndex]))
+            this.missedAttacks.push([newRow + 1, newValueIndex]);
+          if (!isArrayInArray(this.hitAttacks, [newRow, newValueIndex - 1]))
+            this.missedAttacks.push([newRow, newValueIndex - 1]);
+          if (!isArrayInArray(this.hitAttacks, [newRow, newValueIndex + 1]))
+            this.missedAttacks.push([newRow, newValueIndex + 1]);
+        }
+      }
+
       return true;
     }
 
@@ -117,6 +148,7 @@ class Gameboard {
       if (options.vertical) curRow += i;
       if (!options.vertical) curValIndex += i;
 
+      // check if no ship too close
       if (this.board[curRow][curValIndex] instanceof Ship) return false;
       if (
         curValIndex < 9 &&
@@ -145,6 +177,87 @@ class Gameboard {
     }
 
     return true;
+  }
+
+  getSquaresCoveredByNewShip(ship, coords, options = { vertical: false }) {
+    const [row, valueIndex] = coords;
+
+    const squaresCovered = [];
+
+    for (let i = 0; i < ship.length; i++) {
+      if (options.vertical) {
+        if (row + i > 9) return squaresCovered;
+        squaresCovered.push([row + i, valueIndex]);
+      } else {
+        if (valueIndex + i > 9) return squaresCovered;
+        squaresCovered.push([row, valueIndex + i]);
+      }
+    }
+    return squaresCovered;
+  }
+
+  getNextShipLengthToPlace() {
+    const shipsLengthOrder = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+
+    const playerShipsLengths = this.ships.map((ship) => ship.length);
+    const currentShipLength = shipsLengthOrder[playerShipsLengths.length];
+
+    return currentShipLength;
+  }
+
+  fillRandomly() {
+    while (this.getNextShipLengthToPlace()) {
+      let currShip = new Ship(this.getNextShipLengthToPlace());
+
+      let randomCoords = [
+        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 10),
+      ];
+
+      let randomVertical = Math.random() < 0.5;
+
+      this.placeShip(currShip, randomCoords, { vertical: randomVertical });
+    }
+  }
+
+  findAllShipSquares(length, coords) {
+    const [row, valueIndex] = coords;
+
+    const result = [coords];
+
+    for (let i = 1; i < length; i++) {
+      if (row + i > 9) break;
+
+      if (this.board[row + i][valueIndex] instanceof Ship)
+        result.push([row + i, valueIndex]);
+      else break;
+    }
+
+    for (let i = 1; i < length; i++) {
+      if (row - 1 < 0) break;
+
+      if (this.board[row - i][valueIndex] instanceof Ship)
+        result.push([row - i, valueIndex]);
+      else break;
+    }
+
+    for (let i = 1; i < length; i++) {
+      if (valueIndex + i > 9) break;
+
+      if (this.board[row][valueIndex + i] instanceof Ship)
+        result.push([row, valueIndex + i]);
+      else break;
+    }
+
+    for (let i = 1; i < length; i++) {
+      if (valueIndex - 1 < 0) break;
+
+      if (this.board[row][valueIndex - i] instanceof Ship)
+        result.push([row, valueIndex - i]);
+      else break;
+    }
+
+    return result;
   }
 }
 
